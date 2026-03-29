@@ -16,7 +16,8 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
-      - run: npm run check
+      - run: npm run format
+      - run: npm run lint
 
   lint-templates:
     name: Angular template lint
@@ -27,7 +28,7 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
-      - run: npm run lint:templates
+      - run: npm run lint:html
 
   lint-css:
     name: CSS lint
@@ -38,4 +39,4 @@ jobs:
         with:
           node-version: '20'
       - run: npm ci
-      - run: npm run lint:css
+      - run: npm run lint:styles

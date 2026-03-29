@@ -69,33 +69,27 @@ npm start
 TypeScript/JavaScript (vite+):
 
 ```bash
-npm run check       # vp check
-npm run check:fix   # vp check --fix
-npm run format      # vp fmt
+npm run lint        # vp lint
+npm run lint:fix    # vp lint --fix
+npm run format      # vp fmt --check
 npm run format:fix  # vp fmt
 ```
 
 Angular templates and CSS:
 
 ```bash
-npm run lint:templates
-npm run lint:css
-```
-
-All checks:
-
-```bash
-npm run lint:all
-npm run lint:all:fix
+npm run lint:html
+npm run lint:styles
+npm run lint:styles:fix
 ```
 
 ## CI Pipeline (Parallel Jobs)
 
 The workflow in [.github/workflows/ci.yml](.github/workflows/ci.yml) runs three independent jobs in parallel:
 
-- TS/JS lint: `npm run check`
-- Template lint: `npm run lint:templates`
-- CSS lint: `npm run lint:css`
+- TS/JS lint: `npm run lint`
+- Template lint: `npm run lint:html`
+- CSS lint: `npm run lint:styles`
 
 Result: total CI lint time is bounded by the slowest single job, not the sum of all jobs.
 
@@ -105,6 +99,10 @@ Result: total CI lint time is bounded by the slowest single job, not the sum of 
 - ESLint flat config for templates: [eslint.config.js](eslint.config.js)
 - Stylelint rules: [.stylelintrc.json](.stylelintrc.json)
 - vite+ orchestration: [vite.config.js](vite.config.js)
+
+## Demo UI
+
+The sample app now includes a small landing page that explains the tool split and shows the main developer commands in the UI. The implementation lives in [src/app/app.ts](src/app/app.ts), [src/app/app.html](src/app/app.html), and [src/app/app.scss](src/app/app.scss).
 
 ## When This Is a Good Fit
 
