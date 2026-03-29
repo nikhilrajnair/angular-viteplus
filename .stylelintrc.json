@@ -1,14 +1,12 @@
 {
-  "extends": [
-    "stylelint-config-standard",
-    "stylelint-config-recess-order"
-  ],
+  "extends": ["stylelint-config-standard", "stylelint-config-recess-order"],
   "ignoreFiles": ["dist/**", "node_modules/**", ".angular/**"],
   "rules": {
     "color-no-invalid-hex": true,
     "unit-no-unknown": true,
     "property-no-unknown": true,
     "declaration-block-no-duplicate-properties": true,
-    "color-named": "never"
+    "color-named": "never",
+    "no-empty-source": null
   }
 }

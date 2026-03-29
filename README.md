@@ -1,100 +1,128 @@
-# Angular OxLint Hybrid Linting
+# Angular + Oxlint Hybrid Linting (vite+)
 
-An Angular 20 project with **hybrid linting & formatting** across TypeScript, templates, and styles.
+This repository documents a practical Angular quality-tooling split:
 
-## Linting Architecture
+- Keep Angular CLI for app lifecycle (`ng serve`, `ng build`, `ng test`)
+- Use vite+ as a high-speed runner for linting, formatting, and staged-file checks
+- Split linting by responsibility instead of forcing one tool to handle everything
 
-### Unified TS/JS via [vite+](https://vite-plus.dev/)
-**vite+** is a modern toolchain that bundles **Oxlint** and **Oxfmt**:
-- **[Oxlint](https://oxc-project.github.io/)** — Blazingly fast linting (Rust-based), replaces ESLint for TS/JS
-- **[Oxfmt](https://oxc-project.github.io/docs/guide/formatter.html)** — Opinionated code formatting (included in vite+)
-- Commands: `vp check` and `vp fmt` (abstracted via npm scripts)
+## What Changed (and What Did Not)
 
-### Complementary Linters
-- **[ESLint](https://eslint.org/)** — Angular template linting (`.html` files only)
-- **[Stylelint](https://stylelint.io/)** — CSS/SCSS linting
+Angular CLI is still the runtime/build/test tool:
 
-### Why This Stack?
-- **vite+** handles TypeScript/JavaScript fast (Oxlint is ~100x faster than ESLint for JS)
-- **ESLint** specializes in Angular template rules (directives, bindings, accessibility)
-- **Stylelint** enforces CSS/SCSS conventions
-- **Parallel CI** — Run all three simultaneously; total time = slowest job
+```bash
+npm start   # ng serve
+npm run build
+npm test
+```
+
+Only the quality layer changed:
+
+- TypeScript linting moved to Oxlint (through vite+)
+- Formatting moved to Oxfmt (through vite+)
+- ESLint is used only where Angular requires it (templates)
+- Stylelint remains for CSS rules
+
+## Why This Hybrid Setup
+
+The issue was workflow friction. Traditional ESLint + Prettier pipelines often become slow enough that:
+
+- local linting gets skipped
+- checks move to pre-commit only
+- pre-commit gets bypassed
+
+The hybrid setup restores fast feedback by routing each file type to the fastest tool that can correctly lint it.
+
+## Tool Responsibility Split
+
+| File type       | Formatting | Linting                             |
+| --------------- | ---------- | ----------------------------------- |
+| `.ts`           | Oxfmt      | Oxlint + Angular TS rules           |
+| `.html`         | Oxfmt      | ESLint (`@angular-eslint/template`) |
+| `.css`, `.scss` | Oxfmt      | Stylelint                           |
+
+Important Angular limitation:
+
+- Oxlint does not yet lint Angular templates.
+- ESLint is still required for `.html` templates because template parsing is Angular-specific.
+
+## vite+ as the Runner
+
+vite+ bundles both Oxlint and Oxfmt, and it orchestrates staged checks through [vite.config.js](vite.config.js). This keeps tool execution focused and avoids overlap/conflicts.
 
 ## Quick Start
 
 Install dependencies:
+
 ```bash
 npm install
 ```
 
-Start the development server:
+Run app locally:
+
 ```bash
 npm start
 ```
 
-Navigate to `http://localhost:4200/`.
+## Linting and Formatting Commands
 
-## Linting & Formatting
+TypeScript/JavaScript (vite+):
 
-### Lint TS/JS (via vite+)
 ```bash
-npm run check              # vp check — runs Oxlint
-npm run check:fix         # vp check --fix — auto-fix with Oxlint
-npm run format:fix        # vp fmt --fix — auto-format with Oxfmt
+npm run check       # vp check
+npm run check:fix   # vp check --fix
+npm run format      # vp fmt
+npm run format:fix  # vp fmt
 ```
 
-### Lint Templates & Styles
+Angular templates and CSS:
+
 ```bash
-npm run lint:templates    # ESLint (Angular .html files)
-npm run lint:css          # Stylelint (CSS/SCSS files)
+npm run lint:templates
+npm run lint:css
 ```
 
-### Run All Linters
+All checks:
+
 ```bash
-npm run lint:all          # Run all checks (sequential)
-npm run lint:all:fix      # Auto-fix all (sequential)
+npm run lint:all
+npm run lint:all:fix
 ```
 
-## Code Scaffolding
+## CI Pipeline (Parallel Jobs)
 
-Generate new components with Angular CLI:
-```bash
-ng generate component component-name
-ng generate --help  # Full list of schematics
-```
+The workflow in [.github/workflows/ci.yml](.github/workflows/ci.yml) runs three independent jobs in parallel:
 
-## Building
+- TS/JS lint: `npm run check`
+- Template lint: `npm run lint:templates`
+- CSS lint: `npm run lint:css`
 
-Build for production:
-```bash
-ng build
-```
+Result: total CI lint time is bounded by the slowest single job, not the sum of all jobs.
 
-Build artifacts are stored in the `dist/` directory.
+## Current Config Files
 
-## Testing
+- Oxlint rules: [.oxlintrc.json](.oxlintrc.json)
+- ESLint flat config for templates: [eslint.config.js](eslint.config.js)
+- Stylelint rules: [.stylelintrc.json](.stylelintrc.json)
+- vite+ orchestration: [vite.config.js](vite.config.js)
 
-Run unit tests:
-```bash
-npm test
-```
+## When This Is a Good Fit
 
-## CI Pipeline
+Use this setup when:
 
-GitHub Actions runs linting jobs **in parallel** on push to `main` and pull requests:
-- **TS/JS lint + format** — `vp check` (Oxlint via vite+) — ~2-3 seconds
-- **Angular template lint** — `npm run lint:templates` (ESLint) — scoped to `.html` files
-- **CSS lint** — `npm run lint:css` (Stylelint) — scoped to `.css` files
+- Angular linting is noticeably slow in your codebase
+- developers are bypassing local or pre-commit checks
+- you want faster feedback without losing Angular template lint coverage
 
-**Benefit:** Total CI time = max(slowest job), not sum of all jobs. Since vite+ is near-instant, you're effectively waiting only for the template linter.
+You may not need this setup when:
 
-See [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for workflow config.
+- your project is small and existing lint performance is already fast
 
-## Resources
+## References
 
 - [Angular CLI](https://angular.dev/tools/cli)
-- **[vite+](https://vite-plus.dev/)** — Unified toolchain for TS/JS
-  - [Oxlint](https://oxc-project.github.io/) — Fast linting engine
-  - [Oxfmt](https://oxc-project.github.io/docs/guide/formatter.html) — Code formatter
-- [ESLint Angular Plugin](https://github.com/angular-eslint/angular-eslint) — Template linting
-- [Stylelint](https://stylelint.io/) — CSS/SCSS linting
+- [vite+](https://vite-plus.dev/)
+- [Oxlint](https://oxc-project.github.io/)
+- [Oxfmt](https://oxc-project.github.io/docs/guide/formatter.html)
+- [angular-eslint](https://github.com/angular-eslint/angular-eslint)
+- [Stylelint](https://stylelint.io/)

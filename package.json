@@ -1,23 +1,19 @@
 {
   "name": "angular-oxlint-hybrid-linting",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "check": "vp check",
     "check:fix": "vp check --fix",
-    "format": "vp fmt",
-    "format:fix": "vp fmt --fix",
     "lint:templates": "eslint \"src/**/*.html\"",
-    "lint:css": "stylelint \"src/**/*.css\"",
-    "lint:all": "npm run check && npm run lint:templates && npm run lint:css",
-    "lint:all:fix": "npm run check:fix && npm run lint:templates -- --fix && npm run lint:css -- --fix"
+    "stylelint": "stylelint \"src/**/*.{css,scss}\"",
+    "stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
