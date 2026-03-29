@@ -1,0 +1,229 @@
+/* ── Variables ─────────────────────────────────────── */
+:host {
+  --clr-bg: #0d0f14;
+  --clr-surface: #161b27;
+  --clr-border: #252d3f;
+  --clr-text: #e2e8f0;
+  --clr-muted: #8892a4;
+  --clr-accent: #6c63ff;
+  --clr-accent-2: #00d4aa;
+
+  display: block;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--clr-text);
+  background-color: var(--clr-bg);
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+.landing {
+  max-width: 1100px;
+  padding: 0 1.5rem 4rem;
+  margin-inline: auto;
+}
+
+/* ── Hero ───────────────────────────────────────────── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 1rem 4rem;
+  text-align: center;
+
+  &-eyebrow {
+    display: inline-block;
+    padding: 0.25rem 0.875rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--clr-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--clr-border);
+    border-radius: 999px;
+  }
+
+  &-title {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+
+    span {
+      background: linear-gradient(135deg, var(--clr-accent), var(--clr-accent-2));
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &-subtitle {
+    max-width: 580px;
+    margin: 0 0 2.5rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--clr-muted);
+  }
+
+  &-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+}
+
+/* ── Buttons ────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &-primary {
+    color: #fff;
+    background-color: var(--clr-accent);
+  }
+
+  &-ghost {
+    color: var(--clr-text);
+    border: 1px solid var(--clr-border);
+  }
+}
+
+/* ── Tools grid ─────────────────────────────────────── */
+.tools {
+  padding: 3rem 0;
+
+  &-heading {
+    margin: 0 0 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.card {
+  padding: 1.5rem;
+  background-color: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 0.875rem;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--clr-accent);
+  }
+
+  &-top {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 0.875rem;
+  }
+
+  &-name {
+    flex: 1;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  &-description {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--clr-muted);
+  }
+}
+
+/* ── Badges ─────────────────────────────────────────── */
+.badge {
+  padding: 0.2rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border-radius: 999px;
+
+  &-blue {
+    color: #60a5fa;
+    background-color: #1e3a5f;
+  }
+
+  &-purple {
+    color: #a78bfa;
+    background-color: #2d1b69;
+  }
+
+  &-green {
+    color: #4ade80;
+    background-color: #14532d;
+  }
+
+  &-orange {
+    color: #fb923c;
+    background-color: #431407;
+  }
+}
+
+/* ── Commands ───────────────────────────────────────── */
+.commands {
+  padding: 3rem 0;
+
+  &-heading {
+    margin: 0 0 2rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+}
+
+.command {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 0.75rem;
+
+  &-code {
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.9rem;
+    color: var(--clr-accent-2);
+  }
+
+  &-label {
+    font-size: 0.85rem;
+    color: var(--clr-muted);
+  }
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+.footer {
+  padding-top: 2rem;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: var(--clr-muted);
+  text-align: center;
+  border-top: 1px solid var(--clr-border);
+}
