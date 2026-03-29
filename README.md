@@ -1,59 +1,100 @@
-# AngularOxlintDemo
+# Angular OxLint Hybrid Linting
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.0.
+An Angular 20 project with **hybrid linting & formatting** across TypeScript, templates, and styles.
 
-## Development server
+## Linting Architecture
 
-To start a local development server, run:
+### Unified TS/JS via [vite+](https://vite-plus.dev/)
+**vite+** is a modern toolchain that bundles **Oxlint** and **Oxfmt**:
+- **[Oxlint](https://oxc-project.github.io/)** — Blazingly fast linting (Rust-based), replaces ESLint for TS/JS
+- **[Oxfmt](https://oxc-project.github.io/docs/guide/formatter.html)** — Opinionated code formatting (included in vite+)
+- Commands: `vp check` and `vp fmt` (abstracted via npm scripts)
 
+### Complementary Linters
+- **[ESLint](https://eslint.org/)** — Angular template linting (`.html` files only)
+- **[Stylelint](https://stylelint.io/)** — CSS/SCSS linting
+
+### Why This Stack?
+- **vite+** handles TypeScript/JavaScript fast (Oxlint is ~100x faster than ESLint for JS)
+- **ESLint** specializes in Angular template rules (directives, bindings, accessibility)
+- **Stylelint** enforces CSS/SCSS conventions
+- **Parallel CI** — Run all three simultaneously; total time = slowest job
+
+## Quick Start
+
+Install dependencies:
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Start the development server:
+```bash
+npm start
+```
 
-## Code scaffolding
+Navigate to `http://localhost:4200/`.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Linting & Formatting
 
+### Lint TS/JS (via vite+)
+```bash
+npm run check              # vp check — runs Oxlint
+npm run check:fix         # vp check --fix — auto-fix with Oxlint
+npm run format:fix        # vp fmt --fix — auto-format with Oxfmt
+```
+
+### Lint Templates & Styles
+```bash
+npm run lint:templates    # ESLint (Angular .html files)
+npm run lint:css          # Stylelint (CSS/SCSS files)
+```
+
+### Run All Linters
+```bash
+npm run lint:all          # Run all checks (sequential)
+npm run lint:all:fix      # Auto-fix all (sequential)
+```
+
+## Code Scaffolding
+
+Generate new components with Angular CLI:
 ```bash
 ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+ng generate --help  # Full list of schematics
 ```
 
 ## Building
 
-To build the project run:
-
+Build for production:
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Build artifacts are stored in the `dist/` directory.
 
-## Running unit tests
+## Testing
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
+Run unit tests:
 ```bash
-ng test
+npm test
 ```
 
-## Running end-to-end tests
+## CI Pipeline
 
-For end-to-end (e2e) testing, run:
+GitHub Actions runs linting jobs **in parallel** on push to `main` and pull requests:
+- **TS/JS lint + format** — `vp check` (Oxlint via vite+) — ~2-3 seconds
+- **Angular template lint** — `npm run lint:templates` (ESLint) — scoped to `.html` files
+- **CSS lint** — `npm run lint:css` (Stylelint) — scoped to `.css` files
 
-```bash
-ng e2e
-```
+**Benefit:** Total CI time = max(slowest job), not sum of all jobs. Since vite+ is near-instant, you're effectively waiting only for the template linter.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+See [`.github/workflows/ci.yml`](.github/workflows/ci.yml) for workflow config.
 
-## Additional Resources
+## Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [Angular CLI](https://angular.dev/tools/cli)
+- **[vite+](https://vite-plus.dev/)** — Unified toolchain for TS/JS
+  - [Oxlint](https://oxc-project.github.io/) — Fast linting engine
+  - [Oxfmt](https://oxc-project.github.io/docs/guide/formatter.html) — Code formatter
+- [ESLint Angular Plugin](https://github.com/angular-eslint/angular-eslint) — Template linting
+- [Stylelint](https://stylelint.io/) — CSS/SCSS linting
