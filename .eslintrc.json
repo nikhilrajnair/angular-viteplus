@@ -1,0 +1,15 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": ["*.html"],
+      "parser": "@angular-eslint/template-parser",
+      "plugins": ["@angular-eslint/template"],
+      "rules": {
+        "@angular-eslint/template/button-has-type": "error",
+        "@angular-eslint/template/no-negated-async": "warn",
+        "@angular-eslint/template/accessibility-alt-text": "error"
+      }
+    }
+  ]
+}

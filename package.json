@@ -1,12 +1,20 @@
 {
-  "name": "angular-oxlint-demo",
+  "name": "angular-oxlint-hybrid-linting",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "check": "vp check",
+    "check:fix": "vp check --fix",
+    "format": "vp fmt",
+    "format:fix": "vp fmt --fix",
+    "lint:templates": "eslint \"src/**/*.html\"",
+    "lint:css": "stylelint \"src/**/*.css\"",
+    "lint:all": "npm run check && npm run lint:templates && npm run lint:css",
+    "lint:all:fix": "npm run check:fix && npm run lint:templates -- --fix && npm run lint:css -- --fix"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +29,9 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^21.3.1",
+    "@angular-eslint/eslint-plugin-template": "^21.3.1",
+    "@angular-eslint/template-parser": "^21.3.1",
     "@angular/build": "^20.0.0",
     "@angular/cli": "^20.0.0",
     "@angular/compiler-cli": "^20.0.0",
@@ -31,6 +42,13 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.8.2"
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "stylelint": "^17.6.0",
+    "stylelint-config-recess-order": "^7.7.0",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-order": "^8.1.1",
+    "typescript": "~5.8.2",
+    "vite-plus": "^0.1.14"
   }
 }
