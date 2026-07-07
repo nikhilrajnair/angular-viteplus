@@ -83,6 +83,23 @@ npm run lint:styles
 npm run lint:styles:fix
 ```
 
+All local checks:
+
+```bash
+npm run check
+```
+
+## Git Hooks
+
+Hooks use Vite+'s built-in Git hook support, so there is no Husky/lint-staged setup to install.
+
+```bash
+npm run prepare
+```
+
+- `pre-commit` runs `vp staged` against staged files.
+- `pre-push` runs `npm run check`.
+
 ## CI Pipeline (Parallel Jobs)
 
 The workflow in [.github/workflows/ci.yml](.github/workflows/ci.yml) runs three independent jobs in parallel:

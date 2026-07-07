@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-vp staged
+npm run check
